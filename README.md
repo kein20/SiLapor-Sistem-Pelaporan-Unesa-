@@ -1,6 +1,4 @@
-Markdown
-
-# 📢 SiLapor UNESA (Sistem Pelaporan Unesa)
+# SiLapor UNESA (Sistem Pelaporan Unesa)
 
 **SiLapor UNESA** adalah aplikasi berbasis web (*Progressive Web App*) yang dirancang untuk mendigitalkan proses pelaporan kerusakan infrastruktur di lingkungan Universitas Negeri Surabaya. Aplikasi ini mengintegrasikan kecerdasan buatan (*Artificial Intelligence*) untuk mendeteksi objek kerusakan secara otomatis, memudahkan civitas akademika dalam mengirimkan laporan secara cepat, akurat, dan transparan.
 
