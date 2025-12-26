@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#005baa">
+    <title>SiLapor UNESA</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <link rel="manifest" href="./app.webmanifest">
+    <link rel="icon" href="./images/icons/icon-192.png" type="image/png">
+    <link rel="apple-touch-icon" href="./images/icons/icon-192.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <header class="app-bar">
+        <div class="container app-bar__content">
+            <div class="app-bar__brand">
+                <img src="./images/logo.png" alt="Logo" class="app-bar__logo"
+                    style="height: 40px; width: auto;">
+                <span>SiLapor <span class="text-gold">UNESA</span></span>
+            </div>
+            <button id="hamburgerButton" class="app-bar__menu"><i class="fas fa-bars"></i></button>
+            <nav id="navigationDrawer" class="app-bar__nav">
+                <ul>
+                    <li><a href="#/" class="nav-link">Beranda</a></li>
+                    <li><a href="#/lapor" class="nav-link">Buat Laporan</a></li>
+                    <li><a href="#/login" id="authButton" class="nav-btn">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="mainContent"></main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Nur Lintang Enjang Kinasih</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@1.0.0"></script>
+</body>
+
+</html>

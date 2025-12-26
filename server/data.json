@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "AC Bocor",
+    "location": "Gedung K10 Lantai 2, Ruang 02.04",
+    "desc": "Air AC menetes deras di ruang kelas, lantai menjadi licin.",
+    "img": "./images/ac.jpg",
+    "lat": -7.312,
+    "lng": 112.727
+  },
+  {
+    "id": 2,
+    "title": "Plafon Rusak",
+    "location": "Gedung O1 FIP, Koridor Lt. 1 Depan Lift",
+    "desc": "Plafon terlihat lapuk dan berisiko jatuh menimpa mahasiswa.",
+    "img": "./images/plafon.jpeg",
+    "lat": -7.313,
+    "lng": 112.728
+  }
+]
