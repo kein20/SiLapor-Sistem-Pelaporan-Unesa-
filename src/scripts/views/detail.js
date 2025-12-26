@@ -86,7 +86,6 @@ const Detail = {
         document.getElementById('mapDetail').innerHTML =
           '<div class="error-msg">Koordinat lokasi tidak tersedia.</div>';
       }
-
     } catch (error) {
       console.error(error);
       this.showError('Gagal memuat data. Pastikan server Backend menyala.');
@@ -116,13 +115,14 @@ const Detail = {
     const map = L.map('mapDetail').setView([report.lat, report.lng], 15);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
 
-    L.marker([report.lat, report.lng]).addTo(map)
+    L.marker([report.lat, report.lng])
+      .addTo(map)
       .bindPopup(`<b>${report.title}</b><br>${report.location}`)
       .openPopup();
-  }
+  },
 };
 
 export default Detail;

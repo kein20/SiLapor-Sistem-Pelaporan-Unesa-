@@ -59,26 +59,25 @@ const Login = {
             text: `Selamat datang kembali, ${username}!`,
             timer: 1500, // Otomatis tutup dalam 1.5 detik
             showConfirmButton: false,
-            confirmButtonColor: '#005baa'
+            confirmButtonColor: '#005baa',
           }).then(() => {
             // Pindah ke halaman Home setelah alert tutup
             window.location.hash = '/';
             // Refresh halaman agar menu navigasi (Login/Logout) terupdate
             window.location.reload();
           });
-
         } else {
           // [UPDATED] Menggunakan SweetAlert Error
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'Username dan Password wajib diisi!',
-            confirmButtonColor: '#d33'
+            confirmButtonColor: '#d33',
           });
         }
       });
     }
-  }
+  },
 };
 
 export default Login;

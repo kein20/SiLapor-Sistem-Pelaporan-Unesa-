@@ -1,8 +1,8 @@
 import DataManager from '../data/data-manager';
 
 const Home = {
-    async render() {
-        return `
+  async render() {
+    return `
       <section class="hero">
         <div class="container">
           <h1>Sistem Laporan Infrastruktur UNESA</h1>
@@ -22,33 +22,34 @@ const Home = {
         <div class="card-grid" id="reportsList"></div>
       </section>
     `;
-    },
+  },
 
-    async afterRender() {
-        const container = document.getElementById('reportsList');
-        const loading = document.getElementById('loading');
+  async afterRender() {
+    const container = document.getElementById('reportsList');
+    const loading = document.getElementById('loading');
 
-        // Tampilkan loading sebelum ambil data
-        loading.style.display = 'block';
+    // Tampilkan loading sebelum ambil data
+    loading.style.display = 'block';
 
-        try {
-            // PERBAIKAN: Tambahkan await karena sekarang ambil dari Server
-            const allReports = await DataManager.getAllReports();
+    try {
+      // PERBAIKAN: Tambahkan await karena sekarang ambil dari Server
+      const allReports = await DataManager.getAllReports();
 
-            // Sembunyikan loading setelah data sampai
-            loading.style.display = 'none';
+      // Sembunyikan loading setelah data sampai
+      loading.style.display = 'none';
 
-            // Ambil 6 terbaru (Pastikan allReports adalah array sebelum di-slice)
-            const reports = Array.isArray(allReports) ? allReports.slice(0, 6) : [];
+      // Ambil 6 terbaru (Pastikan allReports adalah array sebelum di-slice)
+      const reports = Array.isArray(allReports) ? allReports.slice(0, 6) : [];
 
-            if (reports.length === 0) {
-                container.innerHTML = '<p style="text-align:center; width:100%;">Belum ada laporan masuk.</p>';
-                return;
-            }
+      if (reports.length === 0) {
+        container.innerHTML =
+          '<p style="text-align:center; width:100%;">Belum ada laporan masuk.</p>';
+        return;
+      }
 
-            container.innerHTML = '';
-            reports.forEach(item => {
-                container.innerHTML += `
+      container.innerHTML = '';
+      reports.forEach((item) => {
+        container.innerHTML += `
         <article class="card" onclick="location.hash='#/detail/${item.id}'">
           <img src="${item.img || './images/hero.jpg'}" alt="${item.title}" class="card-img" onerror="this.src='./images/hero.jpg'">
           <div class="card-body">
@@ -59,13 +60,14 @@ const Home = {
           </div>
         </article>
       `;
-            });
-        } catch (error) {
-            console.error(error);
-            loading.style.display = 'none';
-            container.innerHTML = '<p style="text-align:center; color:red;">Gagal memuat data laporan. Pastikan server Back-End menyala.</p>';
-        }
+      });
+    } catch (error) {
+      console.error(error);
+      loading.style.display = 'none';
+      container.innerHTML =
+        '<p style="text-align:center; color:red;">Gagal memuat data laporan. Pastikan server Back-End menyala.</p>';
     }
+  },
 };
 
 export default Home;

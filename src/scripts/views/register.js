@@ -1,14 +1,14 @@
 import DataManager from '../data/data-manager';
 
 const Register = {
-    async render() {
-        // Jika sudah login, lempar ke beranda
-        if (DataManager.isLoggedIn()) {
-            window.location.hash = '/';
-            return '';
-        }
+  async render() {
+    // Jika sudah login, lempar ke beranda
+    if (DataManager.isLoggedIn()) {
+      window.location.hash = '/';
+      return '';
+    }
 
-        return `
+    return `
       <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
         <div class="card" style="padding: 30px; width: 100%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
           <h2 style="text-align:center; color:var(--primary); margin-bottom:20px;">
@@ -46,46 +46,47 @@ const Register = {
         </div>
       </div>
     `;
-    },
+  },
 
-    async afterRender() {
-        const registerForm = document.getElementById('registerForm');
+  async afterRender() {
+    const registerForm = document.getElementById('registerForm');
 
-        if (registerForm) {
-            registerForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const fullname = document.getElementById('fullname').value;
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
+    if (registerForm) {
+      registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fullname = document.getElementById('fullname').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword =
+          document.getElementById('confirmPassword').value;
 
-                // Validasi Password
-                if (password !== confirmPassword) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Password Tidak Cocok',
-                        text: 'Pastikan konfirmasi password sama dengan password Anda.',
-                        confirmButtonColor: '#d33'
-                    });
-                    return;
-                }
-
-                // Simulasi Registrasi Sukses (Untuk Opsi A Full, nanti bisa ditambah API call ke server)
-                if (username && password) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Pendaftaran Berhasil!',
-                        text: 'Silakan login dengan akun baru Anda.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(() => {
-                        // Arahkan ke halaman login
-                        window.location.hash = '/login';
-                    });
-                }
-            });
+        // Validasi Password
+        if (password !== confirmPassword) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Password Tidak Cocok',
+            text: 'Pastikan konfirmasi password sama dengan password Anda.',
+            confirmButtonColor: '#d33',
+          });
+          return;
         }
+
+        // Simulasi Registrasi Sukses (Untuk Opsi A Full, nanti bisa ditambah API call ke server)
+        if (username && password) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Pendaftaran Berhasil!',
+            text: 'Silakan login dengan akun baru Anda.',
+            timer: 2000,
+            showConfirmButton: false,
+          }).then(() => {
+            // Arahkan ke halaman login
+            window.location.hash = '/login';
+          });
+        }
+      });
     }
+  },
 };
 
 export default Register;

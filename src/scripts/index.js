@@ -3,20 +3,20 @@ import '../styles/main.css';
 import App from './app';
 
 const app = new App({
-    button: document.querySelector('#hamburgerButton'),
-    drawer: document.querySelector('#navigationDrawer'),
-    content: document.querySelector('#mainContent'),
+  button: document.querySelector('#hamburgerButton'),
+  drawer: document.querySelector('#navigationDrawer'),
+  content: document.querySelector('#mainContent'),
 });
 
 window.addEventListener('hashchange', () => {
-    app.renderPage();
+  app.renderPage();
 });
 
 window.addEventListener('load', () => {
-    app.renderPage();
+  app.renderPage();
 
-    // Register SW
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js');
-    }
+  // Register SW
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
 });
