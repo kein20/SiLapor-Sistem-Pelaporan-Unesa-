@@ -2,26 +2,31 @@
   "name": "silapor-unesa",
   "version": "1.0.0",
   "description": "Sistem Laporan Infrastruktur Universitas Negeri Surabaya",
-  "main": "src/scripts/index.js",
+  "main": "server/server.js",
   "scripts": {
     "start-dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
+    "start": "node server/server.js",
     "serve": "http-server dist",
     "format": "prettier --write ."
   },
   "author": "Nur Lintang",
   "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.1",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "leaflet": "^1.9.4",
+    "regenerator-runtime": "^0.13.11"
+  },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.20.0",
     "babel-loader": "^9.1.0",
-    "body-parser": "^2.2.1",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^11.0.0",
-    "cors": "^2.8.5",
     "css-loader": "^6.7.0",
     "eslint-config-prettier": "^10.1.8",
-    "express": "^5.2.1",
     "html-webpack-plugin": "^5.5.0",
     "http-server": "^14.1.0",
     "nodemon": "^3.1.11",
@@ -31,9 +36,5 @@
     "webpack-cli": "^5.0.0",
     "webpack-dev-server": "^5.2.2",
     "webpack-merge": "^5.8.0"
-  },
-  "dependencies": {
-    "leaflet": "^1.9.4",
-    "regenerator-runtime": "^0.13.11"
   }
 }

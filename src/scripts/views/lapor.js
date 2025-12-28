@@ -1,5 +1,5 @@
-import DataManager from '../../data/data-manager';
-import AIHelper from '../../utils/ai-helper';
+import DataManager from '../data/data-manager';
+import AIHelper from '../utils/ai-helper';
 
 const Lapor = {
   async render() {
