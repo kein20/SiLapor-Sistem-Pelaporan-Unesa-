@@ -1,4 +1,4 @@
-const API_ENDPOINT = 'silapor-sistem-pelaporan-unesa-production.up.railway.app'
+const API_ENDPOINT = 'silapor-sistem-pelaporan-unesa-production.up.railway.app';
 const AUTH_KEY = 'SILAPOR_USER_SESSION';
 
 const DataManager = {
