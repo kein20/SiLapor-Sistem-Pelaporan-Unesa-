@@ -1,4 +1,6 @@
-const API_ENDPOINT = 'silapor-sistem-pelaporan-unesa-production.up.railway.app';
+const API_ENDPOINT =
+  'https://silapor-sistem-pelaporan-unesa-production.up.railway.app/api/reports';
+
 const AUTH_KEY = 'SILAPOR_USER_SESSION';
 
 const DataManager = {
@@ -6,11 +8,17 @@ const DataManager = {
   async getAllReports() {
     try {
       const response = await fetch(API_ENDPOINT);
+
+      // Cek jika response bukan OK (misal 404 atau 500)
+      if (!response.ok) {
+        throw new Error(`Server Error: ${response.status}`);
+      }
+
       const responseJson = await response.json();
       return responseJson;
     } catch (error) {
       console.error('Gagal mengambil data dari server:', error);
-      return []; // Return kosong jika server mati
+      return []; // Return array kosong agar aplikasi tidak crash
     }
   },
 
@@ -22,12 +30,16 @@ const DataManager = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(report),
       });
+
+      // Cek status pengiriman
+      if (!response.ok) {
+        throw new Error(`Gagal kirim: ${response.status}`);
+      }
+
       return await response.json();
     } catch (error) {
       console.error('Gagal mengirim data:', error);
-      // Hapus alert() biasa, ganti dengan console.error saja
-      // atau biarkan UI (seperti lapor.js) yang menangani alertnya
-      throw error; // Lempar error agar bisa ditangkap oleh SweetAlert di lapor.js
+      throw error;
     }
   },
 
@@ -35,14 +47,17 @@ const DataManager = {
   async getReportById(id) {
     try {
       const response = await fetch(`${API_ENDPOINT}/${id}`);
+
       if (!response.ok) throw new Error('Not Found');
+
       return await response.json();
     } catch (error) {
+      console.error(`Gagal ambil detail ID ${id}:`, error);
       return null;
     }
   },
 
-  // --- AUTHENTICATION (Sederhana/Client-side simulation) ---
+  // --- AUTHENTICATION (Client-side) ---
   isLoggedIn() {
     return localStorage.getItem(AUTH_KEY) !== null;
   },
