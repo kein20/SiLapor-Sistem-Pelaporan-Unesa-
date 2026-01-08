@@ -27,21 +27,39 @@ const Lapor = {
             
             <div class="form-group">
               <label class="form-label">Bukti Foto</label>
-              
-              <div class="upload-area" id="uploadArea">
-                <img id="previewImg" src="#" style="display:none; width:100%; max-height:300px; object-fit:contain; margin-bottom:10px; border-radius:8px;">
-                
-                <div id="uploadText">
-                   <i class="fas fa-camera" style="font-size:2rem; color:#ccc; margin-bottom:10px;"></i>
-                   <p style="color:#666;">Klik untuk ambil foto / upload gambar</p>
-                </div>
-                
-                <div id="aiLoading" style="display:none; text-align:center; padding:20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:var(--accent);"></i>
-                    <p style="color:var(--primary); font-weight:600; margin-top:10px;">AI sedang menganalisis objek...</p>
-                </div>
 
-                <input type="file" id="foto" accept="image/*" hidden required>
+              <div style="display:flex; gap:12px; margin-bottom:15px;">
+                <button type="button" id="btnCamera" class="btn-secondary">
+                  <i class="fas fa-camera"></i> Ambil Foto
+                </button>
+
+                <button type="button" id="btnUpload" class="btn-secondary">
+                  <i class="fas fa-upload"></i> Upload dari Perangkat
+                </button>
+              </div>
+
+              <input 
+                type="file" 
+                id="foto" 
+                accept="image/*" 
+                hidden 
+                required
+              >
+
+              <div id="previewContainer" style="display:none; text-align:center;">
+                <img 
+                  id="previewImg" 
+                  style="width:100%; max-height:300px; object-fit:contain; border-radius:8px;"
+                >
+
+                <button type="button" id="btnRetake" class="btn-outline-danger">
+                  <i class="fas fa-sync-alt"></i> Ambil Ulang / Ganti Foto
+                </button>
+              </div>
+
+              <div id="aiLoading" style="display:none; text-align:center; padding:20px;">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>AI sedang menganalisis objek...</p>
               </div>
             </div>
 
@@ -103,10 +121,9 @@ const Lapor = {
   async afterRender() {
     if (!DataManager.isLoggedIn()) return;
 
-    // --- 1. INISIALISASI AI ---
-    await AIHelper.init(); //
+    // --- 1. Init AI & Map ---
+    await AIHelper.init();
 
-    // --- 2. LOGIKA MAP
     let lat = -7.312151;
     let lng = 112.726268;
 
@@ -125,18 +142,9 @@ const Lapor = {
         marker.setLatLng([latitude, longitude]);
       } else {
         map = L.map('map').setView([latitude, longitude], 17);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(
-          map
-        );
-        marker = L.marker([latitude, longitude], { draggable: true }).addTo(
-          map
-        );
-
-        // Fix Leaflet Map Render bug in tabs/hidden divs
-        setTimeout(() => {
-          map.invalidateSize();
-        }, 500);
-
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
+        setTimeout(() => { map.invalidateSize(); }, 500);
         marker.on('dragend', (e) => {
           const position = marker.getLatLng();
           lat = position.lat;
@@ -146,10 +154,18 @@ const Lapor = {
     };
     updateMap(lat, lng);
 
-    // 3. LOGIKA FOTO & AI
+    // --- 2. LOGIKA INTERAKSI FOTO ---
     const fotoInput = document.getElementById('foto');
-    const uploadArea = document.getElementById('uploadArea');
+    const btnCamera = document.getElementById('btnCamera');
+    const btnUpload = document.getElementById('btnUpload');
+    const previewContainer = document.getElementById('previewContainer');
+    const btnRetake = document.getElementById('btnRetake');
     const judulInput = document.getElementById('judul');
+
+    function disableSourceButtons(disabled) {
+      btnCamera.disabled = disabled;
+      btnUpload.disabled = disabled;
+    }
 
     // UI Elements
     const aiLoading = document.getElementById('aiLoading');
@@ -163,8 +179,38 @@ const Lapor = {
 
     let fotoBase64 = null;
 
-    uploadArea.addEventListener('click', () => fotoInput.click());
+    // KLIK AREA UPLOAD
+    btnUpload.addEventListener('click', () => {
+      fotoInput.removeAttribute('capture');
+      fotoInput.click();
+    });
 
+    // TAKE PHOTO
+    btnCamera.addEventListener('click', () => {
+      fotoInput.setAttribute('capture', 'environment');
+      fotoInput.click();
+    });
+
+    // LOGIKA TOMBOL RETAKE (RESET)
+    btnRetake.addEventListener('click', () => {
+      // 1. Bersihkan Input File
+      fotoInput.value = '';
+      fotoBase64 = null;
+
+      // 2. Kembalikan Tampilan ke Awal
+      previewContainer.style.display = 'none';
+      uploadArea.style.display = 'block';
+      aiResult.style.display = 'none';
+      
+      disableSourceButtons(false);
+
+      // 3. Reset Form Judul
+      judulInput.value = '';
+      judulInput.placeholder = "Menunggu hasil foto...";
+      judulInput.style.backgroundColor = 'white';
+    });
+
+    // C. SAAT GAMBAR DIPILIH
     fotoInput.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -172,13 +218,12 @@ const Lapor = {
         reader.onload = async (res) => {
           fotoBase64 = res.target.result;
 
-          // Tampilkan Preview
           const imgPreview = document.getElementById('previewImg');
           imgPreview.src = fotoBase64;
-          imgPreview.style.display = 'block';
-          document.getElementById('uploadText').style.display = 'none';
 
-          // Reset UI State
+          uploadArea.style.display = 'none';
+          previewContainer.style.display = 'block';
+          disableSourceButtons(true);
           aiLoading.style.display = 'block';
           aiResult.style.display = 'none';
           k3Box.style.display = 'none';
@@ -186,32 +231,35 @@ const Lapor = {
           labelBox.style.background = '#e3f2fd';
           labelBox.style.borderColor = '#bbdefb';
 
-          // --- EKSEKUSI AI ---
-          const result = await AIHelper.detectObject(imgPreview); //
+          // 3. Eksekusi AI
+          await imgPreview.decode();
+          const result = await AIHelper.detectObject(imgPreview);
+
 
           aiLoading.style.display = 'none';
+
+          if (!result) {
+            Swal.fire({ icon: 'error', title: 'AI Error', text: 'Gagal memproses gambar.' });
+            return;
+          }
+
           aiResult.style.display = 'block';
 
-          // --- LOGIKA HASIL ---
+          // 4. Handle Hasil AI
           if (result.category === 'Unknown') {
-            // KASUS: Tidak Dikenali / Confidence Rendah
             detectedText.textContent = 'Tidak Terdeteksi';
             detectedText.style.color = '#721c24';
             confidenceScore.textContent = `Akurasi rendah (${result.confidence})`;
 
-            labelBox.style.background = '#f8d7da'; // Merah
+            labelBox.style.background = '#f8d7da';
             labelBox.style.borderColor = '#f5c6cb';
             aiIcon.className = 'fas fa-question-circle';
             aiIcon.style.color = '#721c24';
 
-            // Kosongkan judul buat manual
             judulInput.value = '';
             judulInput.placeholder = 'Silakan isi judul manual...';
-            judulInput.focus();
-
             manualMsg.style.display = 'block';
           } else {
-            // KASUS: Berhasil Deteksi
             const cleanName = result.category.replace(/_/g, ' ');
 
             detectedText.textContent = cleanName;
@@ -221,22 +269,14 @@ const Lapor = {
             aiIcon.className = 'fas fa-check-circle';
             aiIcon.style.color = '#005baa';
 
-            // Auto Fill Judul
             judulInput.value = `Laporan: ${cleanName}`;
-
-            // Animasi flash kuning di input
             judulInput.style.backgroundColor = '#fff9c4';
-            setTimeout(
-              () => (judulInput.style.backgroundColor = 'white'),
-              1000
-            );
+            setTimeout(() => (judulInput.style.backgroundColor = 'white'), 1000);
 
-            // Tampilkan K3 (Jika ada)
             if (result.k3) {
               k3Box.style.display = 'block';
               document.getElementById('k3Message').innerText = result.k3.msg;
-              document.getElementById('k3Action').innerText =
-                'Saran: ' + result.k3.action;
+              document.getElementById('k3Action').innerText = 'Saran: ' + result.k3.action;
             }
           }
         };
@@ -244,52 +284,75 @@ const Lapor = {
       }
     });
 
-    // 4. SUBMIT FORM
-    document
-      .getElementById('laporForm')
-      .addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // 3. SUBMIT FORM
+    document.getElementById('laporForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-        const btnSubmit = document.getElementById('btnSubmit');
-        const originalText = btnSubmit.innerHTML;
-        btnSubmit.innerHTML =
-          '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
-        btnSubmit.disabled = true;
+      if (aiLoading.style.display === 'block') {
+        Swal.fire({
+          icon: 'info',
+          title: 'Tunggu Sebentar',
+          text: 'AI masih menganalisis gambar.',
+        });
+        return;
+      }
 
-        const newReport = {
-          id: new Date().getTime(),
-          title: document.getElementById('judul').value,
-          location: document.getElementById('lokasi').value,
-          desc: document.getElementById('desc').value,
-          img: fotoBase64 || './images/hero.jpg', // Fallback image
-          lat: lat,
-          lng: lng,
-        };
+      const titleValue = judulInput.value.trim();
 
-        try {
-          await DataManager.addReport(newReport);
+      if (!titleValue) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Judul Kosong',
+          text: 'Judul laporan wajib diisi.',
+        });
+        return;
+      }
 
-          await Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: 'Laporan Anda telah terkirim.',
-            confirmButtonColor: '#005baa',
-            timer: 2000,
-          });
+      if (!fotoBase64) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Foto Belum Ada',
+          text: 'Silakan unggah foto sebagai bukti laporan.',
+        });
+        return;
+      }
 
-          window.location.hash = '/';
-        } catch (error) {
-          console.error(error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Gagal',
-            text: 'Terjadi kesalahan koneksi.',
-            confirmButtonColor: '#d33',
-          });
-          btnSubmit.innerHTML = originalText;
-          btnSubmit.disabled = false;
-        }
-      });
+      const btnSubmit = document.getElementById('btnSubmit');
+      const originalText = btnSubmit.innerHTML;
+      btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+      btnSubmit.disabled = true;
+
+      const newReport = {
+        id: crypto.randomUUID(),
+        title: titleValue,
+        location: document.getElementById('lokasi').value,
+        desc: document.getElementById('desc').value,
+        img: fotoBase64,
+        lat,
+        lng,
+      };
+
+      try {
+        await DataManager.addReport(newReport);
+        await Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: 'Laporan Anda telah terkirim.',
+          timer: 2000,
+          confirmButtonColor: '#005baa',
+        });
+        window.location.hash = '/';
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Terjadi kesalahan koneksi.',
+        });
+        btnSubmit.innerHTML = originalText;
+        btnSubmit.disabled = false;
+      }
+    });
   },
 };
 

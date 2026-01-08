@@ -1,4 +1,3 @@
-// 🔗 Link Model Teachable Machine
 const URL_MODEL = 'https://teachablemachine.withgoogle.com/models/Nx-0C1FzJ/';
 
 let model, maxPredictions;
@@ -38,13 +37,12 @@ const K3_ADVICE = {
 const AIHelper = {
   // 1. Inisialisasi Model
   async init() {
-    if (model) return true; // Kalau sudah ada, skip load
+    if (model) return true;
 
     const modelURL = URL_MODEL + 'model.json';
     const metadataURL = URL_MODEL + 'metadata.json';
 
     try {
-      // Pastikan script tmImage sudah ada di index.html
       model = await tmImage.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
       console.log('🤖 AI SiLapor Siap (Custom Model)!');
@@ -58,26 +56,26 @@ const AIHelper = {
   // 2. Deteksi Gambar
   async detectObject(imageElement) {
     try {
-      // Pastikan model sudah dimuat
       if (!model) await this.init();
 
-      // Prediksi menggunakan Teachable Machine
       const prediction = await model.predict(imageElement);
 
       let highestProb = 0;
       let bestClass = '';
 
-      // Cari probabilitas tertinggi
-      for (let i = 0; i < maxPredictions; i++) {
-        if (prediction[i].probability > highestProb) {
-          highestProb = prediction[i].probability;
-          bestClass = prediction[i].className;
-        }
-      }
+      console.log("🔍 HASIL ANALISIS AI:");
+      prediction.forEach((p) => {
+        console.log(`${p.className}: ${(p.probability * 100).toFixed(1)}%`);
 
-      // --- LOGIKA FILTER (Threshold) ---
-      // Jika keyakinan AI di bawah 50%, anggap tidak tahu
-      if (highestProb < 0.5) {
+        if (p.probability > highestProb) {
+          highestProb = p.probability;
+          bestClass = p.className;
+        }
+      });
+      console.log("-----------------------------");
+
+      if (highestProb < 0.50) {
+        console.warn(`⚠️ Prediksi ditolak: AI cuma yakin ${(highestProb * 100).toFixed(1)}% (${bestClass})`);
         return {
           category: 'Unknown',
           confidence: (highestProb * 100).toFixed(1) + '%',
@@ -85,11 +83,10 @@ const AIHelper = {
         };
       }
 
-      // Jika Terdeteksi
       return {
         category: bestClass,
         confidence: (highestProb * 100).toFixed(1) + '%',
-        k3: K3_ADVICE[bestClass] || null, // Ambil saran K3
+        k3: K3_ADVICE[bestClass] || null,
       };
     } catch (error) {
       console.error('AI Error:', error);
