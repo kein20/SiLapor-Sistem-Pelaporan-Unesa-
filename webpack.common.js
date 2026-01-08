@@ -38,8 +38,12 @@ module.exports = {
           },
         },
         {
-          from: path.resolve(__dirname, 'src/sw.js'),
-          to: path.resolve(__dirname, 'dist/'),
+          from: path.resolve(__dirname, 'src/sw.js'), // pastikan file ada di sini
+          to: path.resolve(__dirname, 'dist/sw.js'),
+        },
+        {
+          from: path.resolve(__dirname, 'src/app.webmanifest'),
+          to: path.resolve(__dirname, 'dist/app.webmanifest'),
         },
       ],
     }),
