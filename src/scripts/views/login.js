@@ -24,7 +24,24 @@ const Login = {
             
             <div class="form-group">
               <label class="form-label">Password</label>
-              <input type="password" id="password" class="form-input" placeholder="******" required>
+
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-input"
+                  placeholder="******"
+                  required
+                />
+                <button
+                  type="button"
+                  id="togglePassword"
+                  class="toggle-password"
+                  aria-label="Toggle password visibility"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
             </div>
             
             <button type="submit" class="btn-submit" style="margin-top:10px;">Masuk</button>
@@ -41,33 +58,45 @@ const Login = {
   async afterRender() {
     const loginForm = document.getElementById('loginForm');
 
+    // ===== 1. TOGGLE PASSWORD (DI LUAR SUBMIT) =====
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('togglePassword');
+
+    if (passwordInput && toggleBtn) {
+      const icon = toggleBtn.querySelector('i');
+
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = passwordInput.type === 'password';
+
+        passwordInput.type = isHidden ? 'text' : 'password';
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+      });
+    }
+
+    // ===== 2. SUBMIT LOGIN =====
     if (loginForm) {
       loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
 
-        // Validasi Sederhana
+        const username = document.getElementById('username').value;
+        const password = passwordInput.value;
+
         if (username && password) {
-          // Simpan sesi
           DataManager.login(username);
 
-          // [UPDATED] Menggunakan SweetAlert Success
           Swal.fire({
             icon: 'success',
             title: 'Login Berhasil!',
             text: `Selamat datang kembali, ${username}!`,
-            timer: 1500, // Otomatis tutup dalam 1.5 detik
+            timer: 1500,
             showConfirmButton: false,
             confirmButtonColor: '#005baa',
           }).then(() => {
-            // Pindah ke halaman Home setelah alert tutup
             window.location.hash = '/';
-            // Refresh halaman agar menu navigasi (Login/Logout) terupdate
             window.location.reload();
           });
         } else {
-          // [UPDATED] Menggunakan SweetAlert Error
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
