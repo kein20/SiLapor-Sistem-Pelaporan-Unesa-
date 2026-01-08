@@ -1,70 +1,70 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#005baa" />
-    <title>SiLapor UNESA</title>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#005baa" />
+  <title>SiLapor UNESA</title>
 
-    <link rel="manifest" href="./app.webmanifest" />
-    <link rel="icon" href="./images/icons/icon-192.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </head>
+  <link rel="manifest" href="./app.webmanifest" />
+  <link rel="icon" href="./images/icons/icon-192.png" type="image/png" />
 
-  <body>
-    <a href="#mainContent" class="skip-link">Menuju Konten Utama</a>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
 
-    <header class="app-bar">
-      <div class="container app-bar__content">
-        <div class="app-bar__brand">
-          <img
-            src="./images/logo.png"
-            alt="Logo UNESA"
-            class="app-bar__logo"
-            style="height: 40px; width: auto"
-            onerror="this.style.display = 'none'"
-          />
-          <span>SiLapor <span class="text-gold">UNESA</span></span>
-        </div>
-        <button id="hamburgerButton" class="app-bar__menu">
-          <i class="fas fa-bars"></i>
-        </button>
-        <nav id="navigationDrawer" class="app-bar__nav">
-          <ul>
-            <li><a href="#/" class="nav-link">Beranda</a></li>
-            <li><a href="#/lapor" class="nav-link">Buat Laporan</a></li>
-            <li><a href="#/login" id="authButton" class="nav-btn">Login</a></li>
-          </ul>
-        </nav>
+<body>
+  <a href="#mainContent" class="skip-link">Menuju Konten Utama</a>
+
+  <header class="app-bar">
+    <div class="container app-bar__content">
+      <div class="app-bar__brand">
+        <img src="./images/logo.png" alt="Logo UNESA" class="app-bar__logo" style="height: 40px; width: auto"
+          onerror="this.style.display = 'none'" />
+        <span>SiLapor <span class="text-gold">UNESA</span></span>
       </div>
-    </header>
+      <button id="hamburgerButton" class="app-bar__menu">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav id="navigationDrawer" class="app-bar__nav">
+        <ul>
+          <li><a href="#/" class="nav-link">Beranda</a></li>
+          <li><a href="#/lapor" class="nav-link">Buat Laporan</a></li>
+          <li><a href="#/login" id="authButton" class="nav-btn">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <main id="mainContent" tabindex="0"></main>
+  <main id="mainContent" tabindex="0"></main>
 
-    <footer>
-      <div class="container">
-        <p>&copy; 2025 Nur Lintang Enjang Kinasih - Mini Project Berdampak</p>
-      </div>
-    </footer>
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Nur Lintang Enjang Kinasih - Mini Project Berdampak</p>
+    </div>
+  </footer>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('Service Worker registered'))
+          .catch((err) => console.error('SW failed', err));
+      });
+    }
+  </script>
+
+</body>
+
 </html>
