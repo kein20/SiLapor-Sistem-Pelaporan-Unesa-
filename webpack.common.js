@@ -38,7 +38,7 @@ module.exports = {
           },
         },
         {
-          from: path.resolve(__dirname, 'src/scripts/sw.js'),
+          from: path.resolve(__dirname, 'src/sw.js'),
           to: path.resolve(__dirname, 'dist/'),
         },
       ],
