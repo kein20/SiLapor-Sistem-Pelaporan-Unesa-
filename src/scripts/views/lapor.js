@@ -199,9 +199,8 @@ const Lapor = {
 
       // 2. Kembalikan Tampilan ke Awal
       previewContainer.style.display = 'none';
-      uploadArea.style.display = 'block';
       aiResult.style.display = 'none';
-      
+
       disableSourceButtons(false);
 
       // 3. Reset Form Judul
@@ -221,7 +220,6 @@ const Lapor = {
           const imgPreview = document.getElementById('previewImg');
           imgPreview.src = fotoBase64;
 
-          uploadArea.style.display = 'none';
           previewContainer.style.display = 'block';
           disableSourceButtons(true);
           aiLoading.style.display = 'block';
